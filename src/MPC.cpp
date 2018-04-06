@@ -6,8 +6,9 @@
 using CppAD::AD;
 
 // TODO: Set the timestep length and duration
-const size_t N = 20;
-const double dt = 0.05;
+constexpr size_t N = 20;
+constexpr double dt = 0.05;
+constexpr size_t latency_dt = 2;
 
 constexpr double ref_v = 100;
 constexpr double min_v =  30;
@@ -95,7 +96,6 @@ class FG_eval {
       AD<double> a0 = vars[a_start + t - 1];
 
       // Take the delay of 100ms into account
-      constexpr size_t latency_dt = 2;
       if (t > latency_dt) {
         delta0 = vars[delta_start + t - 1 - latency_dt];
         a0 = vars[a_start + t - 1 - latency_dt];
