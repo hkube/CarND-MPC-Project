@@ -1,6 +1,51 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
+## Overview
+The objective of this project is to implement a model predictive controller (MPC) to navigate a car around a track in the Udacity simulator. The simulator provides the telemetry data and the waypoints along a reference trajectory. The MPC calculate the steering angle and the acceleration or deceleration value so that the car will follow the referenca trajectory and returns these values to the simulator.
+
+## Rubric Points
+
+### Compilation
+
+Change to the project root folder and execute the follwing steps to build and run the project
+- Create the build folder an set up the build environment
+	```
+	mkdir build
+	cd build
+	cmake ..
+	```
+- Build and run the project
+	```
+	make && ./mpc
+	```
+
+### The Model
+The kinematic bicycle model was used in this project.It include the x and y position of the car as well as the orientation angle, the velocity, the cross track error and orientation error.  The model uses state, the steering angle and the acceleration of the previous timestep to calculate the state of the current timestep using the equations below.
+In the equations, the value of the previous timestep have the suffix '\_0' and the values of the current timestep have the suffix '\_1'.
+```
+x_1   = x_0 + v_0 * cos(psi_0) * dt
+y_1   = y_0 + v_0 * sin(psi_0) * dt
+psi_1 = psi_0 - v_0/Lf * delta_0 * dt
+v_1   = v_0 + a_0 * dt
+cte_1 = f_0 - y_0 + v_0 * sin(epsi_0) * dt
+epsi_1 = psi_0 - psides_0 + v_0 * delta_0 / Lf * dt
+```
+
+### Timestep Length and Elapsed Duration
+The values choosen for N and dt are 20 and 0.05. These values were detemined experimentally. Increasing dt to greater values like 0.1 made the car more instable.  
+
+### Polynomial Fitting and MPC Processing
+The waypoints provided by the simulator are given in the simulators coordinate system. They are transformed to the coordinate system of the car (see main.cpp lines 102-107). Therafter, all calculations are done in the car coordinate system wherby the car is always located at the origin of its coordinate system with an orientation of 0.
+
+### Model Predictive Control with Latency
+The additional latency of the controller leads to the effect, that the actuation are applied to the car two timestaps later than without the latency. Therfore, the equations have been adapted to take this into accout (see MPC.cpp lines 99-102).
+
+### Simulation
+The MPC is able to navigate the car around the track without leaving the drivable portion of the track surface (see [MP4 video](https://www.dropbox.com/s/nrl8s05m0gtuzsv/MPC.mp4?dl=0))
+
+
+
 ---
 
 ## Dependencies
